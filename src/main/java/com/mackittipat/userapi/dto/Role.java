@@ -9,12 +9,12 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-public class UserRole {
+public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String role;
-    private Long userId;
+
+    private String name;
 
 }

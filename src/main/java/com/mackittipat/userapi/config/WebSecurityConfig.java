@@ -1,5 +1,6 @@
 package com.mackittipat.userapi.config;
 
+import com.mackittipat.userapi.filter.JwtAuthenticationFilter;
 import com.mackittipat.userapi.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -24,6 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable() // Enabled h2-console
                 .and()
                 .authorizeRequests()
+                .antMatchers("/api/users").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/h2-console/**").permitAll() // Enabled h2-console
                 .anyRequest().authenticated()
@@ -33,6 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // it will never use it to obtain the SecurityContext
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         ;
+        http.addFilterAfter(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
